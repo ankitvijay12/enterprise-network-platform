@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Network Design & Simulation Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <!-- Cytoscape.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+</head>
+<body>
+
+  <!-- Cinematic Hero Intro Screen (Awwwards / Luxury Editorial Style) -->
+  <div id="intro-screen" class="intro-overlay">
+    <!-- Atmospheric Spotlight and Radial Glow -->
+    <div class="intro-spotlight"></div>
+    <div class="intro-ambient-light-beam"></div>
+
+    <!-- Editorial Header Navigation -->
+    <nav class="intro-nav">
+      <div class="intro-logo">
+        <span class="intro-monogram">NE</span>
+        <span class="intro-logo-text">NETSIM PLATFORM</span>
+      </div>
+      <div class="intro-nav-links">
+        <span class="intro-nav-item">ARCHITECTURE</span>
+        <span class="intro-nav-item">SIMULATION</span>
+        <span class="intro-nav-item">RESILIENCY</span>
+        <span class="intro-nav-item">TELEMETRY</span>
+      </div>
+      <div class="intro-nav-action">
+        <button id="btn-enter-direct" class="intro-enter-btn">ENTER STUDIO &rarr;</button>
+      </div>
+    </nav>
+
+    <!-- Center Hero Content Area -->
+    <div class="intro-hero-container">
+      <!-- Left Editorial Text Content -->
+      <div class="intro-text-column">
+        <div class="intro-kicker">
+          <span class="kicker-line"></span>
+          <span class="kicker-label">ENTERPRISE FABRIC ARCHITECTURE</span>
+        </div>
+        <h1 class="intro-headline">
+          Designing the<br>
+          <em>Digital</em> Backbone.
+        </h1>
+        <p class="intro-subheadline">
+          High-fidelity enterprise topology design, deterministic Dijkstra shortest-path routing, and graph-theoretic resiliency simulations for mission-critical networks.
+        </p>
+
+        <div class="intro-feature-pills">
+          <span class="intro-pill">Dijkstra Routing</span>
+          <span class="intro-pill">SPOF Analysis</span>
+          <span class="intro-pill">Traffic Heatmaps</span>
+          <span class="intro-pill">VLSM Engine</span>
+        </div>
+
+        <div class="intro-cta-group">
+          <button id="btn-enter-platform" class="btn-primary intro-primary-cta">
+            <span>Launch Simulation Studio</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <span class="intro-hint-text">Interactive 3D Engine &bull; Click to enter</span>
+        </div>
+      </div>
+
+      <!-- Right 3D Centerpiece Artwork Canvas -->
+      <div class="intro-artwork-column">
+        <div class="intro-3d-wrapper">
+          <canvas id="intro-3d-canvas" width="600" height="600"></canvas>
+          <div class="artwork-halo"></div>
+          <div class="artwork-hud-tag top-right">CORE-FABRIC-01 // ACTIVE</div>
+          <div class="artwork-hud-tag bottom-left">LATENCY: 0.28ms | 100G CLOS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Editorial Bar with Iconic Rotating Stamp Badge -->
+    <div class="intro-footer-bar">
+      <div class="intro-vertical-watermark">
+        <span>ENTERPRISE NETWORK DESIGN PLATFORM &bull; V1.0 PRODUCTION</span>
+      </div>
+
+      <!-- The Iconic Circular Rotating Stamp Badge from Reference Image! -->
+      <div id="intro-scroll-badge" class="circular-stamp-badge" title="Click to Enter Studio">
+        <svg class="stamp-rotating-text" viewBox="0 0 100 100" width="120" height="120">
+          <defs>
+            <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+          </defs>
+          <text font-size="8.8" font-weight="600" letter-spacing="2.3" fill="#ff9900">
+            <textPath href="#circlePath">
+              ENTER STUDIO &bull; EXPLORE TOPOLOGY &bull;
+            </textPath>
+          </text>
+        </svg>
+        <div class="stamp-center-circle">
+          <svg class="stamp-arrow-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="intro-status-indicator">
+        <span class="pulse-dot"></span>
+        <span>SYSTEM OPERATIONAL &bull; CLUSTER ONLINE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top App Header -->
+  <header>
+    <div class="logo-group">
+      <div class="logo-badge">NETSIM</div>
+      <div class="brand-title">
+        Enterprise Network Platform
+        <span class="brand-subtitle-tag">Inference &amp; Topology Engine</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <!-- Intro Replay Button -->
+      <button id="btn-replay-intro" title="Play Intro Experience">Intro Tour</button>
+
+      <!-- Project Selection -->
+      <select id="select-project" title="Select Active Project"></select>
+
+      <!-- Topology Selection -->
+      <select id="select-topology" title="Select Active Topology"></select>
+
+      <!-- Templates & Imports -->
+      <button id="btn-load-template" title="Load Prebuilt Reference Architecture">
+        <span>Templates</span>
+      </button>
+      <button id="btn-export-json" title="Export Topology to JSON">Export JSON</button>
+      <button id="btn-import-json" title="Import Topology from JSON">Import JSON</button>
+      <input type="file" id="file-import-json" accept=".json" style="display:none">
+
+      <!-- User Profile / Auth Status -->
+      <button id="btn-auth-profile" class="btn-primary">Loading...</button>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <div class="main-wrapper">
+
+    <!-- Left Device Palette -->
+    <aside class="sidebar-palette">
+      <div>
+        <div class="palette-heading">Device Library</div>
+        <div class="palette-items">
+          <div class="device-drag-item" data-type="router">
+            <div class="device-icon-tag icon-router">RT</div>
+            <div>
+              <div style="font-weight:600;">Router</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">WAN / BGP Edge</div>
+            </div>
+          </div>
+          <div class="device-drag-item" data-type="l3_switch">
+            <div class="device-icon-tag icon-l3_switch">L3</div>
+            <div>
+              <div style="font-weight:600;">L3 Switch</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">Core / Spine</div>
+            </div>
+          </div>
+          <div class="device-drag-item" data-type="l2_switch">
+            <div class="device-icon-tag icon-l2_switch">L2</div>
+            <div>
+              <div style="font-weight:600;">L2 Switch</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">Access / Leaf</div>
+            </div>
+          </div>
+          <div class="device-drag-item" data-type="firewall">
+            <div class="device-icon-tag icon-firewall">FW</div>
+            <div>
+              <div style="font-weight:600;">Firewall</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">Next-Gen Security</div>
+            </div>
+          </div>
+          <div class="device-drag-item" data-type="server">
+            <div class="device-icon-tag icon-server">SRV</div>
+            <div>
+              <div style="font-weight:600;">Server</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">Compute / Storage</div>
+            </div>
+          </div>
+          <div class="device-drag-item" data-type="access_point">
+            <div class="device-icon-tag icon-access_point">AP</div>
+            <div>
+              <div style="font-weight:600;">Access Point</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">Wi-Fi 6 Gateway</div>
+            </div>
+          </div>
+          <div class="device-drag-item" data-type="endpoint">
+            <div class="device-icon-tag icon-endpoint">PC</div>
+            <div>
+              <div style="font-weight:600;">Endpoint</div>
+              <div style="font-size:0.7rem;color:var(--text-muted)">Workstation / IoT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto; font-size:0.7rem; color:var(--text-muted); line-height:1.4;">
+        <p><b>Tip:</b> Click any device to place it on the canvas. Drag to position.</p>
+      </div>
+    </aside>
+
+    <!-- Center Canvas Area -->
+    <main class="canvas-container">
+      <!-- Floating Canvas Toolbar -->
+      <div class="floating-canvas-controls">
+        <button id="btn-fit-canvas" title="Fit to Viewport">Fit Canvas</button>
+        <button id="btn-layout-cose" title="Force Directed Layout">Auto Layout</button>
+        <button id="btn-layout-grid" title="Grid Layout">Grid</button>
+        <button id="btn-connect-link" class="btn-primary" title="Connect Selected Device to Another">Link Cable</button>
+        <button id="btn-clear-highlights" title="Clear Visual Overlays">Clear Highlights</button>
+      </div>
+
+      <!-- Canvas Graph Container -->
+      <div id="cy"></div>
+
+      <!-- Mode Info Badge -->
+      <div class="canvas-mode-badge">
+        <span class="pulse-dot"></span>
+        <span>Interactive Canvas Active</span>
+      </div>
+    </main>
+
+    <!-- Right Inspector & Tools Drawer -->
+    <aside class="right-drawer">
+      <nav class="drawer-tabs">
+        <button class="tab-btn active" data-tab="tab-inspector">Inspector</button>
+        <button class="tab-btn" data-tab="tab-simulation">Simulations</button>
+        <button class="tab-btn" data-tab="tab-ipam">IPAM / VLSM</button>
+        <button class="tab-btn" data-tab="tab-validation">Health (Score)</button>
+      </nav>
+
+      <div class="drawer-content">
+
+        <!-- Tab 1: Inspector -->
+        <div id="tab-inspector" class="tab-pane active">
+          <div id="inspector-body">
+            <div style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:2rem 0;">
+              Click any device or link on the canvas to inspect and edit properties.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Simulation -->
+        <div id="tab-simulation" class="tab-pane">
+          <!-- Shortest Path -->
+          <div class="panel-card">
+            <div class="card-title">1. Shortest Path Routing (Dijkstra)</div>
+            <div class="form-group">
+              <label>Source Device</label>
+              <select id="sim-src-device"></select>
+            </div>
+            <div class="form-group">
+              <label>Target Device</label>
+              <select id="sim-tgt-device"></select>
+            </div>
+            <div class="form-group">
+              <label>Routing Metric</label>
+              <select id="sim-metric">
+                <option value="cost">Link Metric Cost (IGP Default)</option>
+                <option value="latency">Propagation Latency (ms)</option>
+              </select>
+            </div>
+            <button id="btn-run-sim-path" class="btn-primary">Find Shortest Path</button>
+          </div>
+
+          <!-- Network Resiliency & Outage -->
+          <div class="panel-card">
+            <div class="card-title">2. Outage & Resiliency Analysis</div>
+            <p style="font-size:0.75rem; color:var(--text-muted);">
+              Select a device or link to fail, then simulate failover rerouting and isolated partition impact.
+            </p>
+            <button id="btn-run-sim-failure" class="btn-danger">Simulate Selected Outage</button>
+          </div>
+
+          <!-- Multi-Commodity Traffic & Congestion -->
+          <div class="panel-card">
+            <div class="card-title">3. Traffic Flow & Bottleneck Heatmap</div>
+            <p style="font-size:0.75rem; color:var(--text-muted);">
+              Evaluates multi-commodity traffic demands, flags congested links (>80%), and estimates end-to-end latency.
+            </p>
+            <button id="btn-run-sim-traffic" class="btn-success">Simulate Traffic Load</button>
+          </div>
+
+          <!-- Redundancy / SPOF -->
+          <div class="panel-card">
+            <div class="card-title">4. Single Point of Failure (SPOF)</div>
+            <p style="font-size:0.75rem; color:var(--text-muted);">
+              Calculates articulation points and bridge links using biconnectivity graph theory.
+            </p>
+            <div class="form-row">
+              <button id="btn-run-sim-spof">Detect SPOFs</button>
+              <button id="btn-run-sim-reachability">Reachability Matrix</button>
+            </div>
+          </div>
+
+          <!-- Results View -->
+          <div id="sim-results-output"></div>
+        </div>
+
+        <!-- Tab 3: IPAM & VLSM -->
+        <div id="tab-ipam" class="tab-pane">
+          <!-- VLSM Calculator -->
+          <div class="panel-card">
+            <div class="card-title">VLSM Subnet Calculator</div>
+            <div class="form-group">
+              <label>Major Network CIDR</label>
+              <input type="text" id="vlsm-base-net" value="10.0.0.0/16">
+            </div>
+            <div class="form-group">
+              <label>Departments (Format: Name : Hosts)</label>
+              <textarea id="vlsm-depts-input" rows="4" style="background:var(--bg-primary);color:var(--text-main);border:1px solid var(--border-color);border-radius:6px;padding:0.4rem;font-size:0.75rem;">Engineering: 250
+Sales: 120
+Finance: 50
+Management: 25
+DMZ Servers: 12
+Point-to-Point WAN: 2</textarea>
+            </div>
+            <button id="btn-calc-vlsm" class="btn-primary">Calculate Optimal Subnets</button>
+            <div id="vlsm-results-table" style="margin-top:0.5rem;"></div>
+          </div>
+
+          <!-- Configured Subnets in Topology -->
+          <div class="panel-card">
+            <div class="card-title">Configured Subnets</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>CIDR</th>
+                  <th>Gateway</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="subnets-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: Validation & Health Score -->
+        <div id="tab-validation" class="tab-pane">
+          <!-- Score Gauge Card -->
+          <div class="panel-card">
+            <div class="card-title">Design Health Score</div>
+            <div class="health-score-container">
+              <div class="health-gauge">
+                <span id="health-score-val">--</span>
+              </div>
+              <div class="health-grade-text">
+                <span class="grade-label" id="health-grade-val">Checking...</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Enterprise Rule Engine</span>
+              </div>
+            </div>
+            <button onclick="runHealthValidation()" class="btn-primary" style="margin-top:0.25rem;">Re-evaluate Design</button>
+          </div>
+
+          <!-- Issues Catalog -->
+          <div class="card-title" style="margin-top:0.5rem;">Detected Design Anomalies</div>
+          <div id="validation-issues-list" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Template Selector Modal -->
+  <div id="modal-template" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-size:1rem;">Select Enterprise Reference Architecture</h3>
+        <button onclick="document.getElementById('modal-template').style.display='none'" style="border:none;background:transparent;color:var(--text-muted);font-size:1.2rem;cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="device-drag-item" onclick="loadTemplate('campus')">
+          <div class="device-icon-tag icon-l3_switch">HQ</div>
+          <div>
+            <div style="font-weight:600;">Enterprise Campus Network</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Dual Core Routers, Distribution Switches, Access Switches, Server Farm</div>
+          </div>
+        </div>
+        <div class="device-drag-item" onclick="loadTemplate('datacenter')">
+          <div class="device-icon-tag icon-server">DC</div>
+          <div>
+            <div style="font-weight:600;">Data Center Spine-Leaf Fabric</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">100G Spine-Leaf Clos Architecture with Bare-Metal Compute Nodes</div>
+          </div>
+        </div>
+        <div class="device-drag-item" onclick="loadTemplate('small_office')">
+          <div class="device-icon-tag icon-router">BR</div>
+          <div>
+            <div style="font-weight:600;">Small Office / Branch</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Edge Router, NextGen Firewall, Access Switch, Wi-Fi AP, Server & Endpoints</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="document.getElementById('modal-template').style.display='none'">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toasts -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="./js/api.js"></script>
+  <script src="./js/cytoscape_graph.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
