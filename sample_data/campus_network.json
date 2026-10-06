@@ -1,0 +1,184 @@
+{
+  "name": "Enterprise Campus Network",
+  "version": 1,
+  "description": "Enterprise Core, Distribution, and Access network topology",
+  "metadata": {
+    "tier": "enterprise",
+    "sla": "99.999%"
+  },
+  "subnets": [
+    {
+      "name": "Core Interlink",
+      "cidr": "10.0.0.0/30",
+      "gateway_ip": "10.0.0.1",
+      "vlan_id": 100,
+      "allocated_ips_json": "[\"10.0.0.1\", \"10.0.0.2\"]",
+      "description": "Transit network between Core Routers"
+    },
+    {
+      "name": "Engineering Subnet",
+      "cidr": "10.10.0.0/24",
+      "gateway_ip": "10.10.0.1",
+      "vlan_id": 10,
+      "allocated_ips_json": "[\"10.10.0.1\", \"10.10.0.25\"]",
+      "description": "R&D Workstations"
+    },
+    {
+      "name": "DataCenter Farm",
+      "cidr": "10.100.0.0/24",
+      "gateway_ip": "10.100.0.1",
+      "vlan_id": 50,
+      "allocated_ips_json": "[\"10.100.0.10\", \"10.100.0.11\"]",
+      "description": "Corporate Core Services"
+    }
+  ],
+  "vlans": [
+    { "vlan_id": 10, "name": "Engineering", "description": "R&D team LAN" },
+    { "vlan_id": 50, "name": "Server-Farm", "description": "Core Application Servers" },
+    { "vlan_id": 100, "name": "Transit-Core", "description": "Core routing transit" }
+  ],
+  "devices": [
+    {
+      "name": "Core-Router-01",
+      "device_type": "router",
+      "x_pos": 250,
+      "y_pos": 100,
+      "status": "up",
+      "vendor": "Cisco",
+      "model": "Catalyst 8500",
+      "interfaces": [
+        { "name": "TenGi0/0", "speed_mbps": 10000, "ip_address": "10.0.0.1", "status": "up" },
+        { "name": "TenGi0/1", "speed_mbps": 10000, "ip_address": "10.0.1.1", "status": "up" },
+        { "name": "TenGi0/2", "speed_mbps": 10000, "ip_address": "10.0.2.1", "status": "up" }
+      ]
+    },
+    {
+      "name": "Core-Router-02",
+      "device_type": "router",
+      "x_pos": 450,
+      "y_pos": 100,
+      "status": "up",
+      "vendor": "Cisco",
+      "model": "Catalyst 8500",
+      "interfaces": [
+        { "name": "TenGi0/0", "speed_mbps": 10000, "ip_address": "10.0.0.2", "status": "up" },
+        { "name": "TenGi0/1", "speed_mbps": 10000, "ip_address": "10.0.3.1", "status": "up" },
+        { "name": "TenGi0/2", "speed_mbps": 10000, "ip_address": "10.0.4.1", "status": "up" }
+      ]
+    },
+    {
+      "name": "Dist-L3Switch-01",
+      "device_type": "l3_switch",
+      "x_pos": 200,
+      "y_pos": 280,
+      "status": "up",
+      "vendor": "Arista",
+      "model": "7050SX3",
+      "interfaces": [
+        { "name": "TenGi1/1", "speed_mbps": 10000, "ip_address": "10.0.1.2", "status": "up" },
+        { "name": "TenGi1/2", "speed_mbps": 10000, "ip_address": "10.0.3.2", "status": "up" },
+        { "name": "Gi1/3", "speed_mbps": 1000, "status": "up" }
+      ]
+    },
+    {
+      "name": "Dist-L3Switch-02",
+      "device_type": "l3_switch",
+      "x_pos": 500,
+      "y_pos": 280,
+      "status": "up",
+      "vendor": "Arista",
+      "model": "7050SX3",
+      "interfaces": [
+        { "name": "TenGi1/1", "speed_mbps": 10000, "ip_address": "10.0.2.2", "status": "up" },
+        { "name": "TenGi1/2", "speed_mbps": 10000, "ip_address": "10.0.4.2", "status": "up" },
+        { "name": "Gi1/3", "speed_mbps": 1000, "status": "up" },
+        { "name": "Gi1/4", "speed_mbps": 1000, "status": "up" }
+      ]
+    },
+    {
+      "name": "Access-Switch-01",
+      "device_type": "l2_switch",
+      "x_pos": 200,
+      "y_pos": 460,
+      "status": "up",
+      "vendor": "Cisco",
+      "model": "Catalyst 9300",
+      "interfaces": [
+        { "name": "Gi0/1", "speed_mbps": 1000, "status": "up" },
+        { "name": "Gi0/2", "speed_mbps": 1000, "status": "up" },
+        { "name": "Gi0/10", "speed_mbps": 1000, "vlan_id": 10, "status": "up" }
+      ]
+    },
+    {
+      "name": "DC-Server-Farm-01",
+      "device_type": "server",
+      "x_pos": 500,
+      "y_pos": 460,
+      "status": "up",
+      "vendor": "Dell",
+      "model": "PowerEdge R750",
+      "interfaces": [
+        { "name": "Eth0", "speed_mbps": 1000, "ip_address": "10.100.0.10", "status": "up" }
+      ]
+    },
+    {
+      "name": "Eng-Workstation-01",
+      "device_type": "endpoint",
+      "x_pos": 200,
+      "y_pos": 620,
+      "status": "up",
+      "vendor": "Generic",
+      "model": "Workstation",
+      "interfaces": [
+        { "name": "Eth0", "speed_mbps": 1000, "ip_address": "10.10.0.25", "status": "up" }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source_device_name": "Core-Router-01", "source_interface_name": "TenGi0/0",
+      "target_device_name": "Core-Router-02", "target_interface_name": "TenGi0/0",
+      "bandwidth_mbps": 10000, "latency_ms": 0.5, "cost": 5
+    },
+    {
+      "source_device_name": "Core-Router-01", "source_interface_name": "TenGi0/1",
+      "target_device_name": "Dist-L3Switch-01", "target_interface_name": "TenGi1/1",
+      "bandwidth_mbps": 10000, "latency_ms": 1.0, "cost": 10
+    },
+    {
+      "source_device_name": "Core-Router-02", "source_interface_name": "TenGi0/1",
+      "target_device_name": "Dist-L3Switch-01", "target_interface_name": "TenGi1/2",
+      "bandwidth_mbps": 10000, "latency_ms": 1.0, "cost": 10
+    },
+    {
+      "source_device_name": "Core-Router-01", "source_interface_name": "TenGi0/2",
+      "target_device_name": "Dist-L3Switch-02", "target_interface_name": "TenGi1/1",
+      "bandwidth_mbps": 10000, "latency_ms": 1.0, "cost": 10
+    },
+    {
+      "source_device_name": "Core-Router-02", "source_interface_name": "TenGi0/2",
+      "target_device_name": "Dist-L3Switch-02", "target_interface_name": "TenGi1/2",
+      "bandwidth_mbps": 10000, "latency_ms": 1.0, "cost": 10
+    },
+    {
+      "source_device_name": "Dist-L3Switch-01", "source_interface_name": "Gi1/3",
+      "target_device_name": "Access-Switch-01", "target_interface_name": "Gi0/1",
+      "bandwidth_mbps": 1000, "latency_ms": 1.0, "cost": 10
+    },
+    {
+      "source_device_name": "Dist-L3Switch-02", "source_interface_name": "Gi1/3",
+      "target_device_name": "Access-Switch-01", "target_interface_name": "Gi0/2",
+      "bandwidth_mbps": 1000, "latency_ms": 1.0, "cost": 10
+    },
+    {
+      "source_device_name": "Dist-L3Switch-02", "source_interface_name": "Gi1/4",
+      "target_device_name": "DC-Server-Farm-01", "target_interface_name": "Eth0",
+      "bandwidth_mbps": 1000, "latency_ms": 0.8, "cost": 5
+    },
+    {
+      "source_device_name": "Access-Switch-01", "source_interface_name": "Gi0/10",
+      "target_device_name": "Eng-Workstation-01", "target_interface_name": "Eth0",
+      "bandwidth_mbps": 1000, "latency_ms": 1.5, "cost": 10
+    }
+  ]
+}
