@@ -60,10 +60,10 @@ const mockStore = {
   },
   subnets: {
     1: [
-      { id: 1, name: "Core Interlink", cidr: "10.0.0.0/30", gateway_ip: "10.0.0.1", vlan_id: 100, allocated_ips_json: "["10.0.0.1", "10.0.0.2"]", description: "Transit network between Core Routers" },
-      { id: 2, name: "Engineering Subnet", cidr: "10.10.0.0/24", gateway_ip: "10.10.0.1", vlan_id: 10, allocated_ips_json: "["10.10.0.1", "10.10.0.25"]", description: "R&D Workstations" },
-      { id: 3, name: "Executive Subnet", cidr: "10.20.0.0/24", gateway_ip: "10.20.0.1", vlan_id: 20, allocated_ips_json: "["10.20.0.1", "10.20.0.25"]", description: "Executive & Sales LAN" },
-      { id: 4, name: "DataCenter Farm", cidr: "10.100.0.0/24", gateway_ip: "10.100.0.1", vlan_id: 50, allocated_ips_json: "["10.100.0.10", "10.100.0.11"]", description: "Corporate Core Services" }
+      { id: 1, name: "Core Interlink", cidr: "10.0.0.0/30", gateway_ip: "10.0.0.1", vlan_id: 100, allocated_ips_json: '["10.0.0.1", "10.0.0.2"]', description: "Transit network between Core Routers" },
+      { id: 2, name: "Engineering Subnet", cidr: "10.10.0.0/24", gateway_ip: "10.10.0.1", vlan_id: 10, allocated_ips_json: '["10.10.0.1", "10.10.0.25"]', description: "R&D Workstations" },
+      { id: 3, name: "Executive Subnet", cidr: "10.20.0.0/24", gateway_ip: "10.20.0.1", vlan_id: 20, allocated_ips_json: '["10.20.0.1", "10.20.0.25"]', description: "Executive & Sales LAN" },
+      { id: 4, name: "DataCenter Farm", cidr: "10.100.0.0/24", gateway_ip: "10.100.0.1", vlan_id: 50, allocated_ips_json: '["10.100.0.10", "10.100.0.11"]', description: "Corporate Core Services" }
     ]
   },
   vlans: {
@@ -545,3 +545,5 @@ const apiClient = {
     return this.request(`/reports/summary/${topologyId}`);
   }
 };
+
+window.apiClient = apiClient;

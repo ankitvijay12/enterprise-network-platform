@@ -276,8 +276,8 @@ class TopologyGraph {
     });
 
     links.forEach(l => {
-      const srcDev = ifaceToDev[l.source_interface_id] || devices.find(d => d.id === l.source_device_id);
-      const tgtDev = ifaceToDev[l.target_interface_id] || devices.find(d => d.id === l.target_device_id);
+      const srcDev = ifaceToDev[l.source_interface_id];
+      const tgtDev = ifaceToDev[l.target_interface_id];
 
       if (srcDev && tgtDev) {
         elements.push({
@@ -360,3 +360,5 @@ class TopologyGraph {
     }).run();
   }
 }
+
+window.TopologyGraph = TopologyGraph;

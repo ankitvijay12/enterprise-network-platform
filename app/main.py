@@ -55,13 +55,18 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
 if os.path.exists(frontend_path):
     app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+
     css_path = os.path.join(frontend_path, "css")
     if os.path.exists(css_path):
         app.mount("/css", StaticFiles(directory=css_path), name="css")
+
     js_path = os.path.join(frontend_path, "js")
     if os.path.exists(js_path):
         app.mount("/js", StaticFiles(directory=js_path), name="js")
 
     @app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
     async def serve_index():
-        return FileResponse(os.path.join(frontend_path, "index.html"))
+        return FileResponse(
+            os.path.join(frontend_path, "index.html"),
+            headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
+        )
