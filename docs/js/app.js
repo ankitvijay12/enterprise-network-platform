@@ -1,5 +1,6 @@
 /**
- * CoinSphere / NetSphere Dashboard Application Controller
+ * NetSphere - Enterprise Network Design & Simulation Platform
+ * Application Controller
  */
 
 let graph = null;
@@ -133,24 +134,28 @@ function updateMetricsDeck(devices, links) {
   const routers = devices.filter(d => d.device_type === "router");
   const switches = devices.filter(d => d.device_type === "l3_switch" || d.device_type === "l2_switch");
 
-  // Card 1: BTC / Core Tier
-  const btcFig = document.getElementById("metric-btc-figure");
-  const btcSub = document.getElementById("metric-btc-sub");
-  if (btcFig) {
-    btcFig.textContent = routers.length > 0 ? `0.${(routers.length * 112450).toString().padStart(6, "0")}` : "0.895260";
+  // Card 1: Core Tier Backbone
+  const coreFig = document.getElementById("metric-core-figure") || document.getElementById("metric-btc-figure");
+  const coreSub = document.getElementById("metric-core-sub") || document.getElementById("metric-btc-sub");
+  if (coreFig) {
+    const totalCoreGbps = routers.length > 0 ? (routers.length * 10).toFixed(2) : "20.00";
+    coreFig.textContent = `${totalCoreGbps} Gbps`;
   }
-  if (btcSub) {
-    btcSub.textContent = `$126,223.00 • ${routers.length * 10} Gbps Trunk`;
+  if (coreSub) {
+    const routerCount = routers.length || 2;
+    coreSub.textContent = `BGP / OSPF Mesh • ${routerCount} Transit Routers`;
   }
 
-  // Card 3: ETH / Distribution Tier
-  const ethFig = document.getElementById("metric-eth-figure");
-  const ethSub = document.getElementById("metric-eth-sub");
-  if (ethFig) {
-    ethFig.textContent = switches.length > 0 ? `${switches.length}.95564` : "2.95564";
+  // Card 3: Distribution Tier Fabric
+  const distFig = document.getElementById("metric-dist-figure") || document.getElementById("metric-eth-figure");
+  const distSub = document.getElementById("metric-dist-sub") || document.getElementById("metric-eth-sub");
+  if (distFig) {
+    const totalDistGbps = switches.length > 0 ? (switches.length * 10).toFixed(2) : "40.00";
+    distFig.textContent = `${totalDistGbps} Gbps`;
   }
-  if (ethSub) {
-    ethSub.textContent = `$126,223.00 • ${links.length} Links Active`;
+  if (distSub) {
+    const linkCount = links.length || 13;
+    distSub.textContent = `100% Interlinks Up • ${linkCount} Active Links`;
   }
 }
 
@@ -159,9 +164,14 @@ function updateArcGauge(score) {
   const gaugeFigure = document.getElementById("gauge-center-figure");
   const gaugeSub = document.getElementById("gauge-center-sub");
   const sliderMarker = document.getElementById("gauge-slider-marker");
+  const gaugeTotal = document.getElementById("metric-gauge-total");
 
   if (gaugeFigure) gaugeFigure.textContent = `${score}% Valid`;
   if (gaugeSub) gaugeSub.textContent = score >= 80 ? "Architecture Optimal" : "Attention Recommended";
+  if (gaugeTotal) {
+    const badgeText = score >= 80 ? "Optimal (0 SPOFs)" : "Sub-optimal";
+    gaugeTotal.innerHTML = `${score}.0% Reliability <span class="badge-percent badge-percent-green" style="font-size:0.7rem;">↗ ${badgeText}</span>`;
+  }
 
   // Calculate arc position:
   // Center: (120, 110), Radius R = 95
@@ -182,8 +192,8 @@ function updateArcGauge(score) {
   }
 }
 
-// Render the Top Tokens / Critical Devices List
-function renderTopTokensList(devices, links) {
+// Render the Critical Infrastructure Nodes List
+function renderTopTokensList(devices, links, activeFilter = "all") {
   const container = document.getElementById("token-items-list");
   if (!container) return;
 
@@ -192,43 +202,45 @@ function renderTopTokensList(devices, links) {
     return;
   }
 
-  const iconClasses = ["icon-blue", "icon-yellow", "icon-green", "icon-purple", "icon-orange"];
-  const symbolMap = {
-    router: "B",
-    l3_switch: "❖",
-    l2_switch: "⬡",
-    firewall: "🛡",
-    server: "⚙",
-    endpoint: "💻"
+  let filtered = devices;
+  if (activeFilter === "core") {
+    filtered = devices.filter(d => d.device_type === "router" || d.device_type === "l3_switch");
+  } else if (activeFilter === "edge") {
+    filtered = devices.filter(d => d.device_type === "firewall" || d.device_type === "server" || d.device_type === "endpoint" || d.device_type === "l2_switch");
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = "<div style=\"color:var(--text-dim); text-align:center; padding:1.5rem 0; font-size:0.8rem;\">No matching devices in this tier</div>";
+    return;
+  }
+
+  const roleMeta = {
+    router: { symbol: "RT", class: "icon-yellow", speed: "10 Gbps", role: "BGP Edge AS 65001" },
+    l3_switch: { symbol: "L3", class: "icon-blue", speed: "40 Gbps", role: "OSPF Area 0 Backbone" },
+    l2_switch: { symbol: "L2", class: "icon-green", speed: "1 Gbps", role: "VLAN 10/20/30 Trunk" },
+    firewall: { symbol: "FW", class: "icon-orange", speed: "10 Gbps", role: "IPSec Zero-Trust" },
+    server: { symbol: "SRV", class: "icon-purple", speed: "10 Gbps", role: "Core Compute Node" },
+    endpoint: { symbol: "PC", class: "icon-blue", speed: "1 Gbps", role: "Access Host Port" }
   };
 
-  const sampleTokens = [
-    { name: "Chainlink", sub: "100%", val: "1000", subVal: "$1000" },
-    { name: "Binance", sub: "100%", val: "8000", subVal: "$8000" },
-    { name: "USDT", sub: "100%", val: "4000", subVal: "$4000" },
-    { name: "Solana", sub: "100%", val: "2000", subVal: "$2000" }
-  ];
-
-  container.innerHTML = devices.slice(0, 6).map((d, index) => {
-    const iconClass = iconClasses[index % iconClasses.length];
-    const symbol = symbolMap[d.device_type] || "●";
-    const sample = sampleTokens[index % sampleTokens.length];
-    const ifaceCount = (d.interfaces || []).length;
-    const speed = ifaceCount > 0 ? (ifaceCount * 1000) : 1000;
+  container.innerHTML = filtered.slice(0, 6).map((d) => {
+    const meta = roleMeta[d.device_type] || { symbol: "ND", class: "icon-yellow", speed: "1 Gbps", role: "Standard Node" };
+    const statusText = d.status === "up" ? "100% UP" : "OFFLINE";
+    const statusColor = d.status === "up" ? "#10b981" : "#ef4444";
 
     return `
       <div class="token-row-item" onclick="inspectDeviceById(${d.id})">
         <div class="token-row-left">
-          <div class="token-row-icon ${iconClass}">${symbol}</div>
+          <div class="token-row-icon ${meta.class}">${meta.symbol}</div>
           <div class="token-row-meta">
             <div class="token-row-name">${d.name}</div>
-            <div class="token-row-sub">${d.status === "up" ? "100% UP" : "DOWN"}</div>
+            <div class="token-row-sub" style="color:${statusColor}; font-weight:600;">${statusText}</div>
           </div>
         </div>
         <div class="token-row-right">
           <div class="token-row-figures">
-            <div class="token-row-main-val">${speed}</div>
-            <div class="token-row-sub-val">${sample.subVal}</div>
+            <div class="token-row-main-val">${meta.speed}</div>
+            <div class="token-row-sub-val">${meta.role}</div>
           </div>
           <div class="token-chevron">&rsaquo;</div>
         </div>
@@ -542,6 +554,47 @@ function setupNavigationEvents() {
       }
     });
   });
+
+  // Critical Nodes Subfilter Pills
+  const tokenFilters = document.querySelectorAll(".token-subfilter-pill");
+  tokenFilters.forEach(pill => {
+    pill.addEventListener("click", () => {
+      tokenFilters.forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      const filterKey = pill.dataset.tokenFilter || "all";
+      if (currentTopologyData) {
+        renderTopTokensList(currentTopologyData.devices, currentTopologyData.links, filterKey);
+      }
+    });
+  });
+
+  // Export JSON from Cockpit Header
+  const btnExport = document.getElementById("btn-see-all-profile");
+  if (btnExport) {
+    btnExport.addEventListener("click", () => {
+      if (!currentTopologyData) {
+        showToast("No active topology loaded to export.", "warning");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentTopologyData, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `topology_${currentTopologyId || "export"}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Topology JSON exported successfully!", "success");
+    });
+  }
+
+  // Add Node from Critical Infrastructure Card
+  const btnAddNode = document.getElementById("btn-see-all-tokens");
+  if (btnAddNode) {
+    btnAddNode.addEventListener("click", () => {
+      const palette = document.getElementById("modal-device-palette");
+      if (palette) palette.style.display = "flex";
+    });
+  }
 }
 
 function openSimModal(viewType) {
@@ -848,7 +901,7 @@ window.inspectDeviceById = inspectDeviceById;
 
 
 // =========================================================================
-// RECOGNITO VERTICAL SHUTTER LOUVERS INTRO CONTROLLER
+// NETSPHERE VERTICAL SHUTTER LOUVERS INTRO CONTROLLER
 // =========================================================================
 
 function setupIntroScreen() {

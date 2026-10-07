@@ -1,6 +1,6 @@
 /* =========================================================================
    NETSPHERE / ENTERPRISE NETWORK DESIGN & SIMULATION PLATFORM
-   Styling inspired by CoinSphere / Luxury Dark Amber Crypto Dashboard
+   Luxury Dark Obsidian & Cyber Amber Glassmorphism Theme
    ========================================================================= */
 
 :root {
@@ -507,10 +507,12 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
+.tier-icon-core,
 .token-icon-btc {
   background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 
+.tier-icon-dist,
 .token-icon-eth {
   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
@@ -1161,7 +1163,7 @@ body {
 
 
 /* =========================================================================
-   RECOGNITO VERTICAL SHUTTER LOUVERS INTRO ANIMATION SCREEN
+   NETSPHERE VERTICAL SHUTTER LOUVERS INTRO ANIMATION SCREEN
    ========================================================================= */
 
 .intro-overlay {
