@@ -54,3 +54,4 @@ htmlcov/
 .vscode/
 *.swp
 *.swo
+test_write.txt
