@@ -3,318 +3,646 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Network Design & Simulation Platform</title>
+  <title>CoinSphere - Enterprise Network Design & Simulation Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/styles.css?v=20261007">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20261007b">
   <!-- Cytoscape.js -->
-  <script src="./js/cytoscape.min.js?v=20261007"></script>
-  <script>if (typeof cytoscape === 'undefined') { document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"><\/script>'); }</script>
+  <script src="./js/cytoscape.min.js?v=20261007b"></script>
+  <script>if (typeof cytoscape === "undefined") { document.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js\"><\/script>"); }</script>
 </head>
 <body>
 
-  <!-- Top App Header -->
-  <header>
-    <div class="logo-group">
-      <div class="logo-badge">NETSIM</div>
-      <div class="brand-title">
-        Enterprise Network Platform
-        <span class="brand-subtitle-tag">Inference &amp; Topology Engine</span>
-      </div>
-    </div>
+  <div class="app-container">
 
-    <div class="header-controls">
-      <!-- Project Selection -->
-      <select id="select-project" title="Select Active Project"></select>
-
-      <!-- Topology Selection -->
-      <select id="select-topology" title="Select Active Topology"></select>
-
-      <!-- Templates & Imports -->
-      <button id="btn-load-template" title="Load Prebuilt Reference Architecture">
-        <span>Templates</span>
-      </button>
-      <button id="btn-export-json" title="Export Topology to JSON">Export JSON</button>
-      <button id="btn-import-json" title="Import Topology from JSON">Import JSON</button>
-      <input type="file" id="file-import-json" accept=".json" style="display:none">
-
-      <!-- User Profile / Auth Status -->
-      <button id="btn-auth-profile" class="btn-primary">Loading...</button>
-    </div>
-  </header>
-
-  <!-- Main Viewport -->
-  <div class="main-wrapper">
-
-    <!-- Left Device Palette -->
-    <aside class="sidebar-palette">
-      <div>
-        <div class="palette-heading">Device Library</div>
-        <div class="palette-items">
-          <div class="device-drag-item" data-type="router">
-            <div class="device-icon-tag icon-router">RT</div>
-            <div>
-              <div style="font-weight:600;">Router</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">WAN / BGP Edge</div>
-            </div>
-          </div>
-          <div class="device-drag-item" data-type="l3_switch">
-            <div class="device-icon-tag icon-l3_switch">L3</div>
-            <div>
-              <div style="font-weight:600;">L3 Switch</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">Core / Spine</div>
-            </div>
-          </div>
-          <div class="device-drag-item" data-type="l2_switch">
-            <div class="device-icon-tag icon-l2_switch">L2</div>
-            <div>
-              <div style="font-weight:600;">L2 Switch</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">Access / Leaf</div>
-            </div>
-          </div>
-          <div class="device-drag-item" data-type="firewall">
-            <div class="device-icon-tag icon-firewall">FW</div>
-            <div>
-              <div style="font-weight:600;">Firewall</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">Next-Gen Security</div>
-            </div>
-          </div>
-          <div class="device-drag-item" data-type="server">
-            <div class="device-icon-tag icon-server">SRV</div>
-            <div>
-              <div style="font-weight:600;">Server</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">Compute / Storage</div>
-            </div>
-          </div>
-          <div class="device-drag-item" data-type="access_point">
-            <div class="device-icon-tag icon-access_point">AP</div>
-            <div>
-              <div style="font-weight:600;">Access Point</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">Wi-Fi 6 Gateway</div>
-            </div>
-          </div>
-          <div class="device-drag-item" data-type="endpoint">
-            <div class="device-icon-tag icon-endpoint">PC</div>
-            <div>
-              <div style="font-weight:600;">Endpoint</div>
-              <div style="font-size:0.7rem;color:var(--text-muted)">Workstation / IoT</div>
-            </div>
-          </div>
+    <!-- =====================================================================
+         LEFT SIDEBAR
+         ===================================================================== -->
+    <aside class="sidebar">
+      <!-- Brand Logo -->
+      <div class="brand-header">
+        <div class="brand-logo-mark">
+          <!-- Interlocking Semicircle Sphere Icon matching CoinSphere -->
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-4.08 3.05-7.44 7-7.93v15.86zm2 0V4.07c3.95.49 7 3.85 7 7.93 0 4.08-3.05 7.44-7 7.93z" opacity="0.3"/>
+            <path d="M8.5 7A5 5 0 0 0 8.5 17a5 5 0 0 0 0-10zm7 0a5 5 0 0 1 0 10 5 5 0 0 1 0-10z"/>
+          </svg>
         </div>
+        <div class="brand-text">CoinSphere</div>
       </div>
 
-      <div style="margin-top:auto; font-size:0.7rem; color:var(--text-muted); line-height:1.4;">
-        <p><b>Tip:</b> Click any device to place it on the canvas. Drag to position.</p>
+      <!-- Navigation Group 1: MAIN -->
+      <div class="nav-section">
+        <div class="nav-section-title">MAIN</div>
+        <a class="nav-item active" id="nav-dashboard" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Dashboard
+        </a>
+        <a class="nav-item" id="nav-topologies" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7 7.5l3.5 3m3 3l3.5 3m0-9l-3.5 3m-3 3l-3.5 3"/></svg>
+          Topology Nodes
+        </a>
+        <a class="nav-item" id="nav-analytics" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 4"/></svg>
+          Analytics &amp; Health
+        </a>
+      </div>
+
+      <!-- Navigation Group 2: SIMULATION / TRADING -->
+      <div class="nav-section">
+        <div class="nav-section-title">TRADING &amp; SIMULATION</div>
+        <a class="nav-item" id="nav-sim-path" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          Path Routing
+        </a>
+        <a class="nav-item" id="nav-sim-fail" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Failure Outages
+        </a>
+        <a class="nav-item" id="nav-sim-traffic" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Traffic Load
+        </a>
+        <a class="nav-item" id="nav-sim-spof" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Redundancy &amp; SPOF
+        </a>
+      </div>
+
+      <!-- Navigation Group 3: PREFERENCE / TOOLS -->
+      <div class="nav-section">
+        <div class="nav-section-title">PREFERENCE &amp; TOOLS</div>
+        <a class="nav-item" id="nav-ipam-tool" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          IPAM &amp; VLSM
+        </a>
+        <a class="nav-item" id="nav-add-devices" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Device Palette
+        </a>
+        <a class="nav-item" id="nav-templates-tool" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Topology Templates
+        </a>
+      </div>
+
+      <!-- Sidebar Bottom Help Center Card -->
+      <div class="sidebar-help-card">
+        <div class="help-icon-badge">?</div>
+        <div class="help-card-title">Help Center</div>
+        <div class="help-card-sub">Having trouble in CoinSphere? Run automated health diagnostics.</div>
+        <button class="btn-help-action" id="btn-sidebar-contact">Run Health Check</button>
       </div>
     </aside>
 
-    <!-- Center Canvas Area -->
-    <main class="canvas-container">
-      <!-- Floating Canvas Toolbar -->
-      <div class="floating-canvas-controls">
-        <button id="btn-fit-canvas" title="Fit to Viewport">Fit Canvas</button>
-        <button id="btn-layout-cose" title="Force Directed Layout">Auto Layout</button>
-        <button id="btn-layout-grid" title="Grid Layout">Grid</button>
-        <button id="btn-connect-link" class="btn-primary" title="Connect Selected Device to Another">Link Cable</button>
-        <button id="btn-clear-highlights" title="Clear Visual Overlays">Clear Highlights</button>
+
+    <!-- =====================================================================
+         MAIN VIEWPORT
+         ===================================================================== -->
+    <main class="main-viewport">
+
+      <!-- Topbar Header -->
+      <header class="dashboard-topbar">
+        <!-- Search Pill Bar -->
+        <div class="search-pill-container">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="search-input" id="search-input" placeholder="Search devices, subnets, links...">
+        </div>
+
+        <!-- Top Right Actions -->
+        <div class="topbar-actions">
+          <!-- Active Project Select -->
+          <select id="select-project" class="filter-select-pill" title="Active Project"></select>
+
+          <!-- Active Topology Select -->
+          <select id="select-topology" class="filter-select-pill" title="Active Topology"></select>
+
+          <!-- Light/Dark Mode Switch Pill -->
+          <div class="theme-toggle-pill">
+            <div class="toggle-icon-btn active" title="Dark Obsidian Mode">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+            <div class="toggle-icon-btn" title="Light Glow Mode">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+          </div>
+
+          <!-- Notification Bell Icon -->
+          <div class="topbar-icon-pill" title="System Notifications">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+
+          <!-- User Profile Pill -->
+          <div class="user-profile-pill" id="btn-auth-profile" title="User Profile">
+            <div class="user-avatar" id="user-avatar-tag">DK</div>
+            <div>
+              <div class="user-meta-name" id="user-display-name">Dinesh Kartik</div>
+              <div class="user-meta-role" id="user-display-role">Pro Account</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Section Filter / Eyebrow Header Row -->
+      <div class="section-filter-row">
+        <!-- Left Eyebrow & Balance Title -->
+        <div class="section-label-group">
+          <div class="section-eyebrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            All Assets
+          </div>
+          <div class="section-main-heading">My Balance</div>
+        </div>
+
+        <!-- Left Controls: 24h, eye, refresh -->
+        <div class="section-controls-group">
+          <select class="filter-select-pill" id="filter-time-window">
+            <option value="24h">24h</option>
+            <option value="7d">7d</option>
+            <option value="30d">30d</option>
+          </select>
+          <div class="icon-control-btn" id="btn-toggle-balance-view" title="Toggle Figures">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="icon-control-btn" id="btn-refresh-dashboard" title="Refresh Telemetry">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </div>
+        </div>
+
+        <!-- Right Eyebrow & Top Coins Title -->
+        <div class="section-label-group" style="margin-left:auto; margin-right:1rem;">
+          <div class="section-eyebrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            All Assets
+          </div>
+          <div class="section-main-heading">My Top Coins</div>
+        </div>
+
+        <!-- Right Controls: Currency, 24h -->
+        <div class="section-controls-group">
+          <select class="filter-select-pill" id="filter-currency-tier">
+            <option value="all">All Currencies</option>
+            <option value="routers">Core Routers</option>
+            <option value="switches">Dist Switches</option>
+          </select>
+          <select class="filter-select-pill">
+            <option value="24h">24h</option>
+            <option value="live">Live</option>
+          </select>
+        </div>
       </div>
 
-      <!-- Canvas Graph Container -->
-      <div id="cy"></div>
+      <!-- =====================================================================
+           TOP 3-CARD METRICS DECK
+           ===================================================================== -->
+      <section class="metrics-deck-grid">
 
-      <!-- Mode Info Badge -->
-      <div class="canvas-mode-badge">
-        <span class="pulse-dot"></span>
-        <span>Interactive Canvas Active</span>
-      </div>
+        <!-- CARD 1: BITCOIN / CORE BACKBONE STAT CARD -->
+        <div class="metric-glass-card">
+          <div class="card-header-token">
+            <div class="token-badge-group">
+              <div class="token-icon-circle token-icon-btc">B</div>
+              <div>
+                <div class="token-info-title">BTC</div>
+                <div class="token-info-name">Bitcoin</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-figure-row">
+            <span class="stat-figure-large" id="metric-btc-figure">0.895260</span>
+            <span class="badge-percent badge-percent-green" id="metric-btc-badge">↗ +1.5%</span>
+          </div>
+          <div class="stat-secondary-val" id="metric-btc-sub">$126,223.00</div>
+
+          <!-- Glowing Green Sparkline Wave SVG with +2020.00 Peak Label -->
+          <div class="sparkline-container">
+            <svg viewBox="0 0 240 60">
+              <defs>
+                <linearGradient id="grad-sparkline-green" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+                </linearGradient>
+                <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+              <!-- Dotted reference line -->
+              <line x1="0" y1="36" x2="240" y2="36" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3,3" stroke-width="1"/>
+              <!-- Shaded wave area -->
+              <path d="M 0 42 Q 40 48, 70 38 T 130 24 T 180 34 T 240 38 L 240 60 L 0 60 Z" fill="url(#grad-sparkline-green)"/>
+              <!-- Wave curve -->
+              <path d="M 0 42 Q 40 48, 70 38 T 130 24 T 180 34 T 240 38" fill="none" stroke="#10b981" stroke-width="2.5" filter="url(#glow-green)"/>
+              <!-- Peak Marker Dot -->
+              <circle cx="130" cy="24" r="3.5" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+              <!-- Peak Value Badge -->
+              <rect x="104" y="8" width="52" height="13" rx="6.5" fill="#12151f" stroke="#10b981" stroke-width="0.8"/>
+              <text x="130" y="17.5" fill="#ffffff" font-size="7.5" font-weight="700" text-anchor="middle">+2020.00</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- CARD 2: THE ICONIC MULTI-SEGMENT RADIAL ARC GAUGE CARD -->
+        <div class="metric-glass-card">
+          <div class="gauge-card-header">
+            <div class="gauge-total-val" id="metric-gauge-total">
+              $380,005.00
+              <span class="badge-percent badge-percent-green" style="font-size:0.7rem;">↗ +$2322.25 (5.03)</span>
+            </div>
+          </div>
+
+          <!-- Semicircular Segmented Radial Gauge with Slider Marker -->
+          <div class="radial-gauge-container">
+            <svg class="radial-gauge-svg" viewBox="0 0 240 120">
+              <defs>
+                <filter id="gauge-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+
+              <!-- Track background shadow -->
+              <path d="M 25 110 A 95 95 0 0 1 215 110" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="16" stroke-linecap="round"/>
+
+              <!-- Segment 1: Red/Orange (Critical / Low Tier) -->
+              <!-- Arc from 180 deg to ~145 deg -->
+              <path d="M 25 110 A 95 95 0 0 1 48 56" fill="none" stroke="#ff4500" stroke-width="16" stroke-linecap="round" filter="url(#gauge-glow)"/>
+
+              <!-- Segment 2: Vibrant Amber (Warning / Medium Tier) -->
+              <!-- Arc from 145 deg to ~105 deg -->
+              <path d="M 52 50 A 95 95 0 0 1 100 21" fill="none" stroke="#ff9100" stroke-width="16" stroke-linecap="round" filter="url(#gauge-glow)"/>
+
+              <!-- Segment 3: Electric Purple (High Capacity Tier) -->
+              <!-- Arc from ~105 deg to ~60 deg -->
+              <path d="M 108 19 A 95 95 0 0 1 172 44" fill="none" stroke="#a855f7" stroke-width="16" stroke-linecap="round" filter="url(#gauge-glow)"/>
+
+              <!-- Segment 4: Emerald Green (Optimal / Maximum Tier) -->
+              <!-- Arc from ~60 deg to 0 deg -->
+              <path d="M 178 50 A 95 95 0 0 1 215 110" fill="none" stroke="#10b981" stroke-width="16" stroke-linecap="round" filter="url(#gauge-glow)"/>
+
+              <!-- Interactive / Positioned Slider Marker on the Arc -->
+              <g id="gauge-slider-marker" transform="translate(68, 62) rotate(42)">
+                <rect x="-10" y="-12" width="20" height="24" rx="6" fill="#ffffff" stroke="#ff5722" stroke-width="3" filter="url(#gauge-glow)"/>
+                <line x1="-3" y1="-5" x2="-3" y2="5" stroke="#ff5722" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="3" y1="-5" x2="3" y2="5" stroke="#ff5722" stroke-width="1.5" stroke-linecap="round"/>
+              </g>
+            </svg>
+
+            <!-- Center Metric Details inside the Arch -->
+            <div class="radial-gauge-center-info">
+              <span class="gauge-sub-figure" id="gauge-center-figure">7.52% More</span>
+              <span class="gauge-sub-desc" id="gauge-center-sub">than last week</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: ETHEREUM / DISTRIBUTION TIER STAT CARD -->
+        <div class="metric-glass-card">
+          <div class="card-header-token">
+            <div class="token-badge-group">
+              <div class="token-icon-circle token-icon-eth">E</div>
+              <div>
+                <div class="token-info-title">ETH</div>
+                <div class="token-info-name">Ethereum</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-figure-row">
+            <span class="stat-figure-large" id="metric-eth-figure">2.95564</span>
+            <span class="badge-percent badge-percent-red" id="metric-eth-badge">↘ -0.5%</span>
+          </div>
+          <div class="stat-secondary-val" id="metric-eth-sub">$126,223.00</div>
+
+          <!-- Glowing Coral/Red Sparkline Wave SVG with +2020.00 Peak Label -->
+          <div class="sparkline-container">
+            <svg viewBox="0 0 240 60">
+              <defs>
+                <linearGradient id="grad-sparkline-coral" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ef4444" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0.0"/>
+                </linearGradient>
+                <filter id="glow-coral" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+              <line x1="0" y1="36" x2="240" y2="36" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3,3" stroke-width="1"/>
+              <path d="M 0 44 Q 40 38, 80 44 T 150 26 T 200 42 T 240 40 L 240 60 L 0 60 Z" fill="url(#grad-sparkline-coral)"/>
+              <path d="M 0 44 Q 40 38, 80 44 T 150 26 T 200 42 T 240 40" fill="none" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-coral)"/>
+              <circle cx="150" cy="26" r="3.5" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+              <rect x="124" y="10" width="52" height="13" rx="6.5" fill="#12151f" stroke="#ef4444" stroke-width="0.8"/>
+              <text x="150" y="19.5" fill="#ffffff" font-size="7.5" font-weight="700" text-anchor="middle">+2020.00</text>
+            </svg>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =====================================================================
+           BOTTOM GRID: PROFILE CHART / COCKPIT (LEFT) & TOP TOKENS LIST (RIGHT)
+           ===================================================================== -->
+      <section class="dashboard-bottom-grid">
+
+        <!-- BOTTOM LEFT LARGE CARD: COCKPIT & TELEMETRY CANVAS -->
+        <div class="cockpit-large-card">
+          <!-- Card Title & See All Pill -->
+          <div class="card-title-bar">
+            <span class="card-title-heading">Profile Chart</span>
+            <button class="pill-action-btn" id="btn-see-all-profile">See all</button>
+          </div>
+
+          <!-- Filter Tab Pills Bar -->
+          <div class="cockpit-filter-tabs">
+            <div class="cockpit-tab-pill active" data-cockpit-tab="canvas">Buy Crypto</div>
+            <div class="cockpit-tab-pill" data-cockpit-tab="routing">Referral</div>
+            <div class="cockpit-tab-pill" data-cockpit-tab="outage">Auto Approved</div>
+            <div class="cockpit-tab-pill" data-cockpit-tab="traffic">Bank Approved</div>
+            <div class="cockpit-tab-pill" data-cockpit-tab="spof">Dividend</div>
+            <div class="cockpit-tab-pill" data-cockpit-tab="ipam">VLSM Planner</div>
+          </div>
+
+          <!-- Floating Cytoscape Control Toolbar -->
+          <div class="floating-canvas-controls">
+            <button id="btn-fit-canvas" title="Fit Canvas">Fit Canvas</button>
+            <button id="btn-layout-cose" title="Force Directed Layout">Auto Layout</button>
+            <button id="btn-connect-link" class="btn-highlight" title="Connect Selected Device">Link Cable</button>
+            <button id="btn-open-palette" title="Add Device">+ Device</button>
+            <button id="btn-clear-highlights" title="Clear Visual Overlays">Clear</button>
+          </div>
+
+          <!-- Embedded Cytoscape Network Workspace Canvas -->
+          <div class="cytoscape-embed-container">
+            <div id="cy"></div>
+          </div>
+
+          <!-- Bottom Legend Matching Mockup -->
+          <div class="cockpit-legend-row">
+            <div class="legend-item"><span class="legend-dot" style="background:#ff5722;"></span> Referral $29</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ff9100;"></span> Bank Approved $32</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#a855f7;"></span> Dividend $54</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Auto Approved $06</div>
+          </div>
+        </div>
+
+        <!-- BOTTOM RIGHT CARD: TOP TOKEN LIST -->
+        <div class="token-list-card">
+          <!-- Title & See All -->
+          <div class="card-title-bar">
+            <span class="card-title-heading">Top Token</span>
+            <button class="pill-action-btn" id="btn-see-all-tokens">See all</button>
+          </div>
+
+          <!-- Subfilter Pills -->
+          <div class="token-subfilter-row">
+            <div class="token-subfilter-pill active" data-token-filter="buy">Buy Crypto</div>
+            <div class="token-subfilter-pill" data-token-filter="exchange">By Exchange</div>
+            <div class="token-subfilter-pill" data-token-filter="api">Via API</div>
+          </div>
+
+          <!-- Dynamic Token / Device Items Scroll Container -->
+          <div class="token-items-scroll" id="token-items-list">
+            <!-- Token 1: Chainlink Blue -->
+            <div class="token-row-item" data-token-name="Chainlink">
+              <div class="token-row-left">
+                <div class="token-row-icon icon-blue">⬡</div>
+                <div class="token-row-meta">
+                  <div class="token-row-name">Chainlink</div>
+                  <div class="token-row-sub">100%</div>
+                </div>
+              </div>
+              <div class="token-row-right">
+                <div class="token-row-figures">
+                  <div class="token-row-main-val">1000</div>
+                  <div class="token-row-sub-val">$1000</div>
+                </div>
+                <div class="token-chevron">&rsaquo;</div>
+              </div>
+            </div>
+
+            <!-- Token 2: Binance Yellow -->
+            <div class="token-row-item" data-token-name="Binance">
+              <div class="token-row-left">
+                <div class="token-row-icon icon-yellow">❖</div>
+                <div class="token-row-meta">
+                  <div class="token-row-name">Binance</div>
+                  <div class="token-row-sub">100%</div>
+                </div>
+              </div>
+              <div class="token-row-right">
+                <div class="token-row-figures">
+                  <div class="token-row-main-val">8000</div>
+                  <div class="token-row-sub-val">$8000</div>
+                </div>
+                <div class="token-chevron">&rsaquo;</div>
+              </div>
+            </div>
+
+            <!-- Token 3: USDT Green -->
+            <div class="token-row-item" data-token-name="USDT">
+              <div class="token-row-left">
+                <div class="token-row-icon icon-green">₮</div>
+                <div class="token-row-meta">
+                  <div class="token-row-name">USDT</div>
+                  <div class="token-row-sub">100%</div>
+                </div>
+              </div>
+              <div class="token-row-right">
+                <div class="token-row-figures">
+                  <div class="token-row-main-val">4000</div>
+                  <div class="token-row-sub-val">$4000</div>
+                </div>
+                <div class="token-chevron">&rsaquo;</div>
+              </div>
+            </div>
+
+            <!-- Token 4: Solana Gradient -->
+            <div class="token-row-item" data-token-name="Solana">
+              <div class="token-row-left">
+                <div class="token-row-icon icon-purple">◎</div>
+                <div class="token-row-meta">
+                  <div class="token-row-name">Solana</div>
+                  <div class="token-row-sub">100%</div>
+                </div>
+              </div>
+              <div class="token-row-right">
+                <div class="token-row-figures">
+                  <div class="token-row-main-val">2000</div>
+                  <div class="token-row-sub-val">$2000</div>
+                </div>
+                <div class="token-chevron">&rsaquo;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
     </main>
-
-    <!-- Right Inspector & Tools Drawer -->
-    <aside class="right-drawer">
-      <nav class="drawer-tabs">
-        <button class="tab-btn active" data-tab="tab-inspector">Inspector</button>
-        <button class="tab-btn" data-tab="tab-simulation">Simulations</button>
-        <button class="tab-btn" data-tab="tab-ipam">IPAM / VLSM</button>
-        <button class="tab-btn" data-tab="tab-validation">Health (Score)</button>
-      </nav>
-
-      <div class="drawer-content">
-
-        <!-- Tab 1: Inspector -->
-        <div id="tab-inspector" class="tab-pane active">
-          <div id="inspector-body">
-            <div style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:2rem 0;">
-              Click any device or link on the canvas to inspect and edit properties.
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 2: Simulation -->
-        <div id="tab-simulation" class="tab-pane">
-          <!-- Shortest Path -->
-          <div class="panel-card">
-            <div class="card-title">1. Shortest Path Routing (Dijkstra)</div>
-            <div class="form-group">
-              <label>Source Device</label>
-              <select id="sim-src-device"></select>
-            </div>
-            <div class="form-group">
-              <label>Target Device</label>
-              <select id="sim-tgt-device"></select>
-            </div>
-            <div class="form-group">
-              <label>Routing Metric</label>
-              <select id="sim-metric">
-                <option value="cost">Link Metric Cost (IGP Default)</option>
-                <option value="latency">Propagation Latency (ms)</option>
-              </select>
-            </div>
-            <button id="btn-run-sim-path" class="btn-primary">Find Shortest Path</button>
-          </div>
-
-          <!-- Network Resiliency & Outage -->
-          <div class="panel-card">
-            <div class="card-title">2. Outage & Resiliency Analysis</div>
-            <p style="font-size:0.75rem; color:var(--text-muted);">
-              Select a device or link to fail, then simulate failover rerouting and isolated partition impact.
-            </p>
-            <button id="btn-run-sim-failure" class="btn-danger">Simulate Selected Outage</button>
-          </div>
-
-          <!-- Multi-Commodity Traffic & Congestion -->
-          <div class="panel-card">
-            <div class="card-title">3. Traffic Flow & Bottleneck Heatmap</div>
-            <p style="font-size:0.75rem; color:var(--text-muted);">
-              Evaluates multi-commodity traffic demands, flags congested links (>80%), and estimates end-to-end latency.
-            </p>
-            <button id="btn-run-sim-traffic" class="btn-success">Simulate Traffic Load</button>
-          </div>
-
-          <!-- Redundancy / SPOF -->
-          <div class="panel-card">
-            <div class="card-title">4. Single Point of Failure (SPOF)</div>
-            <p style="font-size:0.75rem; color:var(--text-muted);">
-              Calculates articulation points and bridge links using biconnectivity graph theory.
-            </p>
-            <div class="form-row">
-              <button id="btn-run-sim-spof">Detect SPOFs</button>
-              <button id="btn-run-sim-reachability">Reachability Matrix</button>
-            </div>
-          </div>
-
-          <!-- Results View -->
-          <div id="sim-results-output"></div>
-        </div>
-
-        <!-- Tab 3: IPAM & VLSM -->
-        <div id="tab-ipam" class="tab-pane">
-          <!-- VLSM Calculator -->
-          <div class="panel-card">
-            <div class="card-title">VLSM Subnet Calculator</div>
-            <div class="form-group">
-              <label>Major Network CIDR</label>
-              <input type="text" id="vlsm-base-net" value="10.0.0.0/16">
-            </div>
-            <div class="form-group">
-              <label>Departments (Format: Name : Hosts)</label>
-              <textarea id="vlsm-depts-input" rows="4" style="background:var(--bg-primary);color:var(--text-main);border:1px solid var(--border-color);border-radius:6px;padding:0.4rem;font-size:0.75rem;">Engineering: 250
-Sales: 120
-Finance: 50
-Management: 25
-DMZ Servers: 12
-Point-to-Point WAN: 2</textarea>
-            </div>
-            <button id="btn-calc-vlsm" class="btn-primary">Calculate Optimal Subnets</button>
-            <div id="vlsm-results-table" style="margin-top:0.5rem;"></div>
-          </div>
-
-          <!-- Configured Subnets in Topology -->
-          <div class="panel-card">
-            <div class="card-title">Configured Subnets</div>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>CIDR</th>
-                  <th>Gateway</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="subnets-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Tab 4: Validation & Health Score -->
-        <div id="tab-validation" class="tab-pane">
-          <!-- Score Gauge Card -->
-          <div class="panel-card">
-            <div class="card-title">Design Health Score</div>
-            <div class="health-score-container">
-              <div class="health-gauge">
-                <span id="health-score-val">--</span>
-              </div>
-              <div class="health-grade-text">
-                <span class="grade-label" id="health-grade-val">Checking...</span>
-                <span style="font-size:0.75rem; color:var(--text-muted);">Enterprise Rule Engine</span>
-              </div>
-            </div>
-            <button onclick="runHealthValidation()" class="btn-primary" style="margin-top:0.25rem;">Re-evaluate Design</button>
-          </div>
-
-          <!-- Issues Catalog -->
-          <div class="card-title" style="margin-top:0.5rem;">Detected Design Anomalies</div>
-          <div id="validation-issues-list" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-        </div>
-
-      </div>
-    </aside>
-
   </div>
 
-  <!-- Template Selector Modal -->
-  <div id="modal-template" class="modal-overlay">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3 style="font-size:1rem;">Select Enterprise Reference Architecture</h3>
-        <button onclick="document.getElementById('modal-template').style.display='none'" style="border:none;background:transparent;color:var(--text-muted);font-size:1.2rem;cursor:pointer;">&times;</button>
+
+  <!-- =====================================================================
+       MODALS & DIALOGS
+       ===================================================================== -->
+
+  <!-- Modal 1: Device Palette Dialog -->
+  <div class="modal-overlay" id="modal-device-palette">
+    <div class="modal-glass-content">
+      <div class="modal-header-row">
+        <div class="modal-title">Device Library</div>
+        <button class="modal-close-btn" onclick="document.getElementById("modal-device-palette").style.display="none"">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="device-drag-item" onclick="loadTemplate('campus')">
-          <div class="device-icon-tag icon-l3_switch">HQ</div>
-          <div>
-            <div style="font-weight:600;">Enterprise Campus Network</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);">Dual Core Routers, Distribution Switches, Access Switches, Server Farm</div>
-          </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Click any infrastructure element below to deploy it onto your active network canvas.</p>
+      <div class="palette-grid">
+        <div class="palette-item-card device-drag-item" data-type="router">
+          <div class="palette-item-icon" style="background:#f59e0b;">RT</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Router</div><div style="font-size:0.7rem; color:var(--text-muted);">WAN / BGP Edge</div></div>
         </div>
-        <div class="device-drag-item" onclick="loadTemplate('datacenter')">
-          <div class="device-icon-tag icon-server">DC</div>
-          <div>
-            <div style="font-weight:600;">Data Center Spine-Leaf Fabric</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);">100G Spine-Leaf Clos Architecture with Bare-Metal Compute Nodes</div>
-          </div>
+        <div class="palette-item-card device-drag-item" data-type="l3_switch">
+          <div class="palette-item-icon" style="background:#3b82f6;">L3</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">L3 Switch</div><div style="font-size:0.7rem; color:var(--text-muted);">Core Backbone</div></div>
         </div>
-        <div class="device-drag-item" onclick="loadTemplate('small_office')">
-          <div class="device-icon-tag icon-router">BR</div>
-          <div>
-            <div style="font-weight:600;">Small Office / Branch</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);">Edge Router, NextGen Firewall, Access Switch, Wi-Fi AP, Server & Endpoints</div>
-          </div>
+        <div class="palette-item-card device-drag-item" data-type="l2_switch">
+          <div class="palette-item-icon" style="background:#10b981;">L2</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">L2 Switch</div><div style="font-size:0.7rem; color:var(--text-muted);">Access / Leaf</div></div>
+        </div>
+        <div class="palette-item-card device-drag-item" data-type="firewall">
+          <div class="palette-item-icon" style="background:#ef4444;">FW</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Firewall</div><div style="font-size:0.7rem; color:var(--text-muted);">NextGen Security</div></div>
+        </div>
+        <div class="palette-item-card device-drag-item" data-type="server">
+          <div class="palette-item-icon" style="background:#8b5cf6;">SRV</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Server</div><div style="font-size:0.7rem; color:var(--text-muted);">Compute / Cloud</div></div>
+        </div>
+        <div class="palette-item-card device-drag-item" data-type="endpoint">
+          <div class="palette-item-icon" style="background:#64748b;">PC</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Endpoint</div><div style="font-size:0.7rem; color:var(--text-muted);">Workstation / IoT</div></div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button onclick="document.getElementById('modal-template').style.display='none'">Cancel</button>
+      <button class="btn-primary-action" onclick="document.getElementById("modal-device-palette").style.display="none"">Done</button>
+    </div>
+  </div>
+
+  <!-- Modal 2: Device / Link Inspector Dialog -->
+  <div class="modal-overlay" id="modal-inspector">
+    <div class="modal-glass-content">
+      <div class="modal-header-row">
+        <div class="modal-title" id="inspector-modal-title">Entity Inspector</div>
+        <button class="modal-close-btn" onclick="document.getElementById("modal-inspector").style.display="none"">&times;</button>
+      </div>
+      <div id="inspector-modal-body">
+        <!-- Dynamically populated by onSelectNode / onSelectEdge -->
       </div>
     </div>
   </div>
 
-  <!-- Notification Toasts -->
+  <!-- Modal 3: Simulation Scenarios Dialog -->
+  <div class="modal-overlay" id="modal-simulation">
+    <div class="modal-glass-content">
+      <div class="modal-header-row">
+        <div class="modal-title" id="sim-modal-title">Simulation Scenario</div>
+        <button class="modal-close-btn" onclick="document.getElementById("modal-simulation").style.display="none"">&times;</button>
+      </div>
+
+      <!-- Path Routing Controls -->
+      <div id="sim-view-path">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Source Device</label>
+            <select id="sim-src-device"></select>
+          </div>
+          <div class="form-group">
+            <label>Target Device</label>
+            <select id="sim-tgt-device"></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Routing Metric</label>
+          <select id="sim-metric-type">
+            <option value="cost">Cost / OSPF Metric</option>
+            <option value="latency">Latency (Lowest Delay)</option>
+            <option value="hop">Hop Count (Fewest Hops)</option>
+          </select>
+        </div>
+        <button class="btn-primary-action" id="btn-run-sim-path">Calculate Shortest Path</button>
+      </div>
+
+      <!-- Failure Outage Controls -->
+      <div id="sim-view-outage" style="display:none;">
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">Select a device to fail and observe automated rerouting and partition metrics.</p>
+        <button class="btn-primary-action" id="btn-run-sim-failure" style="background:#ef4444;">Simulate Outage</button>
+      </div>
+
+      <!-- Traffic Simulation Controls -->
+      <div id="sim-view-traffic" style="display:none;">
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">Simulate multi-commodity concurrent enterprise data flows with M/M/1 queuing load checks.</p>
+        <button class="btn-primary-action" id="btn-run-sim-traffic" style="background:#10b981;">Simulate Traffic Load</button>
+      </div>
+
+      <!-- SPOF Controls -->
+      <div id="sim-view-spof" style="display:none;">
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">Detect articulation points and bridges with Tarjan biconnectivity analysis.</p>
+        <button class="btn-primary-action" id="btn-run-sim-spof">Detect Single Points of Failure</button>
+      </div>
+
+      <div id="sim-results-output" style="margin-top:1.25rem; font-size:0.8rem; color:var(--text-muted);"></div>
+    </div>
+  </div>
+
+  <!-- Modal 4: VLSM & IPAM Dialog -->
+  <div class="modal-overlay" id="modal-ipam">
+    <div class="modal-glass-content">
+      <div class="modal-header-row">
+        <div class="modal-title">IPAM &amp; VLSM Planner</div>
+        <button class="modal-close-btn" onclick="document.getElementById("modal-ipam").style.display="none"">&times;</button>
+      </div>
+      <div class="form-group">
+        <label>Major Network CIDR</label>
+        <input type="text" id="vlsm-major-network" value="10.100.0.0/16">
+      </div>
+      <div class="form-group">
+        <label>Subnets Requirement (JSON format)</label>
+        <input type="text" id="vlsm-subnets-req" value="{\"Engineering\": 120, \"Sales\": 60, \"Management\": 30, \"Core_Transit\": 4}">
+      </div>
+      <button class="btn-primary-action" id="btn-calc-vlsm">Calculate Subnets</button>
+      <div id="vlsm-results-area" style="margin-top:1rem;"></div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Topology Templates Dialog -->
+  <div class="modal-overlay" id="modal-template">
+    <div class="modal-glass-content">
+      <div class="modal-header-row">
+        <div class="modal-title">Reference Architecture Templates</div>
+        <button class="modal-close-btn" onclick="document.getElementById("modal-template").style.display="none"">&times;</button>
+      </div>
+      <div class="palette-grid">
+        <div class="palette-item-card" onclick="loadTemplate("campus")">
+          <div class="palette-item-icon" style="background:#ff5722;">🏢</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Enterprise Campus</div><div style="font-size:0.7rem; color:var(--text-muted);">Core &amp; Dist Switches</div></div>
+        </div>
+        <div class="palette-item-card" onclick="loadTemplate("datacenter")">
+          <div class="palette-item-icon" style="background:#3b82f6;">🌐</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Spine-Leaf Fabric</div><div style="font-size:0.7rem; color:var(--text-muted);">High-Throughput DC</div></div>
+        </div>
+        <div class="palette-item-card" onclick="loadTemplate("small_office")">
+          <div class="palette-item-icon" style="background:#10b981;">🏬</div>
+          <div><div style="font-weight:600; font-size:0.85rem;">Small Office / Branch</div><div style="font-size:0.7rem; color:var(--text-muted);">Edge Router &amp; Firewall</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden File Input for JSON import -->
+  <input type="file" id="file-import-json" accept=".json" style="display:none">
+
+  <!-- Notification Toasts Container -->
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- Scripts -->
-  <script src="./js/api.js?v=20261007"></script>
-  <script src="./js/cytoscape_graph.js?v=20261007"></script>
-  <script src="./js/app.js?v=20261007"></script>
+  <!-- Application Controller Scripts -->
+  <script src="./js/api.js?v=20261007b"></script>
+  <script src="./js/cytoscape_graph.js?v=20261007b"></script>
+  <script src="./js/app.js?v=20261007b"></script>
 </body>
 </html>
