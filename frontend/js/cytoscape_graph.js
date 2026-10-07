@@ -298,7 +298,7 @@ class TopologyGraph {
     });
 
     this.cy.add(elements);
-    this.cy.fit(null, 40);
+    this.cy.resize().fit(null, 30);
   }
 
   clearHighlights() {
