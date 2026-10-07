@@ -1158,3 +1158,379 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================================================================
+   RECOGNITO VERTICAL SHUTTER LOUVERS INTRO ANIMATION SCREEN
+   ========================================================================= */
+
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: #06070a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.intro-overlay.leaving {
+  opacity: 0;
+  transform: scale(1.05);
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+/* 11 Vertical Shutter Louver Slats */
+.intro-shutter-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.shutter-slat {
+  flex: 1;
+  height: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.shutter-slat:last-child {
+  border-right: none;
+}
+
+/* Fiery Glowing Amber Wave flowing across slats */
+.slat-wave-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 380px;
+  top: var(--slat-wave-top, 45%);
+  transform: translateY(-50%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 175, 45, 0.85) 22%, rgba(255, 85, 0, 0.65) 45%, rgba(255, 40, 0, 0.25) 68%, transparent 85%);
+  filter: blur(36px);
+  opacity: 0.88;
+  animation: slatWavePulse 4.5s ease-in-out infinite alternate;
+  animation-delay: var(--slat-delay, 0s);
+}
+
+@keyframes slatWavePulse {
+  0% {
+    transform: translateY(-50%) scaleY(0.92);
+    opacity: 0.78;
+  }
+  100% {
+    transform: translateY(-46%) scaleY(1.12);
+    opacity: 0.98;
+  }
+}
+
+/* Top Intro Navigation Bar */
+.intro-top-nav {
+  position: absolute;
+  top: 1.75rem;
+  left: 2.5rem;
+  right: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 15;
+}
+
+.intro-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.intro-brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-sunset);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(255, 95, 0, 0.5);
+}
+
+.intro-brand-logo svg {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff;
+}
+
+.intro-brand-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+/* Center Frosted Navigation Capsule */
+.intro-nav-capsule {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  background: rgba(18, 20, 28, 0.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--pill-radius);
+  padding: 0.55rem 1.6rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.intro-nav-link {
+  color: #c2c7d6;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.intro-nav-link:hover,
+.intro-nav-link.active {
+  color: #ffffff;
+}
+
+.btn-join-beta {
+  background: #ffffff;
+  color: #08090d;
+  font-weight: 700;
+  font-size: 0.84rem;
+  border-radius: var(--pill-radius);
+  padding: 0.6rem 1.45rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+  transition: all 0.25s ease;
+}
+
+.btn-join-beta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(255, 255, 255, 0.35);
+}
+
+/* Center Hero Section */
+.intro-hero-container {
+  max-width: 860px;
+  margin: auto;
+  text-align: center;
+  position: relative;
+  z-index: 12;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Dual Capsule Badge */
+.hero-dual-pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(22, 25, 36, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--pill-radius);
+  padding: 0.25rem 0.3rem 0.25rem 0.25rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dual-pill-orange {
+  background: var(--accent-sunset);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.28rem 0.75rem;
+  border-radius: var(--pill-radius);
+  box-shadow: 0 2px 10px rgba(255, 87, 34, 0.35);
+}
+
+.dual-pill-dark {
+  color: #e2e8f0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.28rem 0.75rem;
+}
+
+/* Monumental Headline */
+.hero-headline {
+  font-size: 3.6rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.hero-subline {
+  font-size: 0.96rem;
+  color: #c5cbd8;
+  max-width: 640px;
+  line-height: 1.6;
+  margin-bottom: 2.25rem;
+  font-weight: 400;
+}
+
+/* Hero CTA Buttons */
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-hero-apply {
+  background: #ffffff;
+  color: #090a0f;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.8rem 2.2rem;
+  border-radius: var(--pill-radius);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.22);
+}
+
+.btn-hero-apply:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(255, 255, 255, 0.38);
+}
+
+.btn-hero-learn {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.8rem 2.2rem;
+  border-radius: var(--pill-radius);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-hero-learn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Floating Circuit Badges & SVG Trace Overlay */
+.circuit-trace-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.floating-circuit-badge {
+  position: absolute;
+  background: rgba(18, 20, 28, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--pill-radius);
+  padding: 0.38rem 1rem;
+  font-size: 0.76rem;
+  color: #e5e9f2;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  z-index: 10;
+}
+
+.floating-circuit-badge:hover {
+  border-color: var(--accent-orange);
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+/* Bottom Center Glowing Portal Orb */
+.intro-portal-container {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+}
+
+.intro-portal-orb {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 45%, #1f2232 0%, #0c0d14 75%);
+  border: 2px solid #ff7700;
+  box-shadow: 0 0 35px rgba(255, 95, 0, 0.55), inset 0 0 25px rgba(255, 95, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  animation: portalOrbPulse 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes portalOrbPulse {
+  0% {
+    box-shadow: 0 0 28px rgba(255, 95, 0, 0.45), inset 0 0 20px rgba(255, 95, 0, 0.25);
+    transform: scale(0.98);
+  }
+  100% {
+    box-shadow: 0 0 45px rgba(255, 120, 20, 0.75), inset 0 0 30px rgba(255, 120, 20, 0.45);
+    transform: scale(1.03);
+  }
+}
+
+.intro-portal-orb:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 55px rgba(255, 120, 20, 0.9), inset 0 0 32px rgba(255, 120, 20, 0.5);
+  border-color: #ffaa00;
+}
+
+.intro-portal-orb svg {
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 0 10px rgba(255, 150, 20, 0.6));
+}
+
+.portal-orb-subtext {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 0.55rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .hero-headline {
+    font-size: 2.5rem;
+  }
+  .intro-nav-capsule {
+    display: none;
+  }
+}

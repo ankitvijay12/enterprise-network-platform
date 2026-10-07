@@ -845,3 +845,80 @@ window.promptAddInterface = promptAddInterface;
 window.runHealthValidation = runHealthValidation;
 window.loadTemplate = loadTemplate;
 window.inspectDeviceById = inspectDeviceById;
+
+
+// =========================================================================
+// RECOGNITO VERTICAL SHUTTER LOUVERS INTRO CONTROLLER
+// =========================================================================
+
+function setupIntroScreen() {
+  const intro = document.getElementById("intro-screen");
+  if (!intro) return;
+
+  const exitIntro = () => {
+    if (intro.classList.contains("leaving")) return;
+    intro.classList.add("leaving");
+    setTimeout(() => {
+      intro.style.display = "none";
+      if (graph && graph.cy) {
+        graph.cy.resize().fit(null, 30);
+      }
+    }, 850);
+  };
+
+  const reopenIntro = () => {
+    intro.style.display = "flex";
+    intro.classList.remove("leaving");
+  };
+
+  // Exit Buttons
+  const applyBtn = document.getElementById("btn-hero-apply");
+  const orbBtn = document.getElementById("btn-portal-orb");
+  const joinBtn = document.getElementById("btn-intro-join");
+  const learnBtn = document.getElementById("btn-hero-learn");
+  const logoBtn = document.getElementById("btn-intro-logo");
+
+  if (applyBtn) applyBtn.addEventListener("click", exitIntro);
+  if (orbBtn) orbBtn.addEventListener("click", exitIntro);
+  if (joinBtn) joinBtn.addEventListener("click", exitIntro);
+  if (learnBtn) learnBtn.addEventListener("click", exitIntro);
+  if (logoBtn) logoBtn.addEventListener("click", exitIntro);
+
+  // Wheel down scroll to exit
+  intro.addEventListener("wheel", (e) => {
+    if (e.deltaY > 20) {
+      exitIntro();
+    }
+  }, { passive: true });
+
+  // Keyboard shortcut to exit
+  window.addEventListener("keydown", (e) => {
+    if (intro.style.display !== "none" && !intro.classList.contains("leaving")) {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+        exitIntro();
+      }
+    }
+  });
+
+  // Replay intro buttons in main dashboard
+  const topbarReplay = document.getElementById("btn-topbar-replay");
+  const sidebarReplay = document.getElementById("btn-sidebar-replay-intro");
+  if (topbarReplay) topbarReplay.addEventListener("click", reopenIntro);
+  if (sidebarReplay) sidebarReplay.addEventListener("click", (e) => { e.preventDefault(); reopenIntro(); });
+
+  // Subtle Mouse Parallax on floating badges
+  const badges = document.querySelectorAll(".floating-circuit-badge");
+  intro.addEventListener("mousemove", (e) => {
+    const xRatio = (e.clientX / window.innerWidth) - 0.5;
+    const yRatio = (e.clientY / window.innerHeight) - 0.5;
+
+    badges.forEach((b, idx) => {
+      const depth = (idx % 3 + 1) * 12;
+      b.style.transform = `translate(${xRatio * depth}px, ${yRatio * depth}px)`;
+    });
+
+    if (orbBtn) {
+      orbBtn.style.transform = `translate(${xRatio * 8}px, ${yRatio * 8}px)`;
+    }
+  });
+}
