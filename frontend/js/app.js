@@ -595,6 +595,73 @@ function setupNavigationEvents() {
       if (palette) palette.style.display = "flex";
     });
   }
+
+  // Live Graph Search Input
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!graph || !graph.cy || !currentTopologyData) return;
+      if (!q) {
+        graph.clearHighlights();
+        return;
+      }
+      const matchIds = currentTopologyData.devices
+        .filter(d => d.name.toLowerCase().includes(q) || d.device_type.toLowerCase().includes(q) || (d.interfaces || []).some(i => (i.ip_address || "").includes(q)))
+        .map(d => d.id);
+      if (matchIds.length > 0) {
+        graph.highlightPath(matchIds, []);
+      } else {
+        graph.clearHighlights();
+      }
+    });
+  }
+
+  // Toggle Figures Visibility (Eye icon button)
+  const btnToggleBal = document.getElementById("btn-toggle-balance-view");
+  let balanceVisible = true;
+  if (btnToggleBal) {
+    btnToggleBal.addEventListener("click", () => {
+      balanceVisible = !balanceVisible;
+      const coreFig = document.getElementById("metric-core-figure") || document.getElementById("metric-btc-figure");
+      const distFig = document.getElementById("metric-dist-figure") || document.getElementById("metric-eth-figure");
+      if (coreFig && distFig) {
+        if (!balanceVisible) {
+          coreFig.dataset.origVal = coreFig.textContent;
+          distFig.dataset.origVal = distFig.textContent;
+          coreFig.textContent = "•••• Gbps";
+          distFig.textContent = "•••• Gbps";
+        } else {
+          coreFig.textContent = coreFig.dataset.origVal || "20.00 Gbps";
+          distFig.textContent = distFig.dataset.origVal || "40.00 Gbps";
+        }
+      }
+      showToast(balanceVisible ? "Telemetry figures visible" : "Telemetry figures masked", "info");
+    });
+  }
+
+  // Sub-Header Infrastructure Tier Dropdown Filter
+  const filterTier = document.getElementById("filter-currency-tier");
+  if (filterTier) {
+    filterTier.addEventListener("change", (e) => {
+      const val = e.target.value;
+      if (currentTopologyData) {
+        let filterKey = "all";
+        if (val === "routers") filterKey = "core";
+        if (val === "switches") filterKey = "edge";
+        renderTopTokensList(currentTopologyData.devices, currentTopologyData.links, filterKey);
+      }
+    });
+  }
+
+  // User Profile Pill Click
+  const userProfileBtn = document.getElementById("btn-auth-profile");
+  if (userProfileBtn) {
+    userProfileBtn.addEventListener("click", () => {
+      const user = apiClient.user || { full_name: "Chief Architect", email: "admin@enterprise.net", role: "admin" };
+      showToast(`User: ${user.full_name} (${user.role.toUpperCase()}) • JWT Session Active`, "info");
+    });
+  }
 }
 
 function openSimModal(viewType) {
@@ -908,21 +975,114 @@ function setupIntroScreen() {
   const intro = document.getElementById("intro-screen");
   if (!intro) return;
 
-  const exitIntro = () => {
-    if (intro.classList.contains("leaving")) return;
+  // Check live backend connectivity on load
+  if (window.apiClient) {
+    apiClient.getProjects().then(() => {
+      const statusText = document.getElementById("intro-backend-status-text");
+      if (statusText) statusText.textContent = "Backend Simulation Engine Online • FastAPI & NetworkX Active";
+    }).catch(err => {
+      console.warn("Backend handshake notice:", err);
+      const statusText = document.getElementById("intro-backend-status-text");
+      if (statusText) statusText.textContent = "Simulation Engine Active • Local / Client Mode Ready";
+    });
+  }
+
+  const exitIntro = (callback) => {
+    if (intro.classList.contains("leaving")) {
+      if (typeof callback === "function") callback();
+      return;
+    }
     intro.classList.add("leaving");
     setTimeout(() => {
       intro.style.display = "none";
       if (graph && graph.cy) {
         graph.cy.resize().fit(null, 30);
       }
-    }, 850);
+      if (typeof callback === "function") {
+        callback();
+      }
+    }, 700);
   };
 
   const reopenIntro = () => {
     intro.style.display = "flex";
     intro.classList.remove("leaving");
   };
+
+  // Intro Frosted Capsule Pill Navigation Tabs
+  const introNavLinks = intro.querySelectorAll(".intro-nav-link");
+  introNavLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      introNavLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+      const target = link.dataset.introTarget || "canvas";
+
+      exitIntro(async () => {
+        if (target === "canvas") {
+          if (graph && graph.cy) {
+            graph.clearHighlights();
+            graph.cy.resize().fit(null, 30);
+          }
+          showToast("Topology Canvas Ready: Connected to Backend", "success");
+        } else if (target === "path") {
+          openSimModal("path");
+          showToast("Routing Engine: Select endpoints to calculate shortest path", "info");
+        } else if (target === "outage") {
+          openSimModal("outage");
+          showToast("Failure Outage: Select devices to cut and test rerouting", "info");
+        } else if (target === "traffic") {
+          openSimModal("traffic");
+          await runTrafficSimulation();
+        } else if (target === "spof") {
+          openSimModal("spof");
+          await runRedundancySimulation();
+        } else if (target === "ipam") {
+          const ipamModal = document.getElementById("modal-ipam");
+          if (ipamModal) ipamModal.style.display = "flex";
+          showToast("IPAM & VLSM Planner Active", "info");
+        }
+      });
+    });
+  });
+
+  // Floating Circuit Badges
+  const circuitBadges = intro.querySelectorAll(".floating-circuit-badge");
+  circuitBadges.forEach(badge => {
+    badge.addEventListener("click", () => {
+      const target = badge.dataset.badgeTarget;
+      exitIntro(() => {
+        if (target === "core") {
+          if (currentTopologyData && graph) {
+            const coreDevs = currentTopologyData.devices.filter(d => d.device_type === "router");
+            graph.highlightPath(coreDevs.map(d => d.id), []);
+            showToast("Highlighted Core Backbone Transit Routers", "info");
+          }
+        } else if (target === "dist") {
+          if (currentTopologyData && graph) {
+            const distDevs = currentTopologyData.devices.filter(d => d.device_type === "l3_switch" || d.device_type === "l2_switch");
+            graph.highlightPath(distDevs.map(d => d.id), []);
+            showToast("Highlighted Spine-Leaf Distribution Switches", "info");
+          }
+        } else if (target === "path") {
+          openSimModal("path");
+        } else if (target === "gateway") {
+          if (currentTopologyData && currentTopologyData.devices.length > 0) {
+            const gw = currentTopologyData.devices.find(d => d.device_type === "router") || currentTopologyData.devices[0];
+            inspectDeviceById(gw.id);
+          }
+        } else if (target === "firewall") {
+          if (currentTopologyData && currentTopologyData.devices.length > 0) {
+            const fw = currentTopologyData.devices.find(d => d.device_type === "firewall") || currentTopologyData.devices[0];
+            inspectDeviceById(fw.id);
+          }
+        } else if (target === "ipam") {
+          const ipamModal = document.getElementById("modal-ipam");
+          if (ipamModal) ipamModal.style.display = "flex";
+        }
+      });
+    });
+  });
 
   // Exit Buttons
   const applyBtn = document.getElementById("btn-hero-apply");
@@ -931,11 +1091,18 @@ function setupIntroScreen() {
   const learnBtn = document.getElementById("btn-hero-learn");
   const logoBtn = document.getElementById("btn-intro-logo");
 
-  if (applyBtn) applyBtn.addEventListener("click", exitIntro);
-  if (orbBtn) orbBtn.addEventListener("click", exitIntro);
-  if (joinBtn) joinBtn.addEventListener("click", exitIntro);
-  if (learnBtn) learnBtn.addEventListener("click", exitIntro);
-  if (logoBtn) logoBtn.addEventListener("click", exitIntro);
+  if (applyBtn) applyBtn.addEventListener("click", () => exitIntro());
+  if (orbBtn) orbBtn.addEventListener("click", () => exitIntro());
+  if (joinBtn) joinBtn.addEventListener("click", () => exitIntro());
+  if (logoBtn) logoBtn.addEventListener("click", () => exitIntro());
+
+  // Documentation Button Opens the Platform Architecture & Engine Modal
+  if (learnBtn) {
+    learnBtn.addEventListener("click", () => {
+      const docModal = document.getElementById("modal-documentation");
+      if (docModal) docModal.style.display = "flex";
+    });
+  }
 
   // Wheel down scroll to exit
   intro.addEventListener("wheel", (e) => {

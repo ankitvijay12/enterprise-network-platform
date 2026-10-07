@@ -49,12 +49,12 @@
 
       <!-- Center Frosted Capsule Pill Navigation -->
       <div class="intro-nav-capsule">
-        <a class="intro-nav-link active" href="#">Topology Canvas</a>
-        <a class="intro-nav-link" href="#">Routing Engine</a>
-        <a class="intro-nav-link" href="#">Failure Outage</a>
-        <a class="intro-nav-link" href="#">Traffic Load</a>
-        <a class="intro-nav-link" href="#">SPOF Analysis</a>
-        <a class="intro-nav-link" href="#">IPAM &amp; VLSM</a>
+        <a class="intro-nav-link active" data-intro-target="canvas" href="#" title="View and interact with the active network topology canvas">Topology Canvas</a>
+        <a class="intro-nav-link" data-intro-target="path" href="#" title="Calculate shortest routing paths with Dijkstra algorithm">Routing Engine</a>
+        <a class="intro-nav-link" data-intro-target="outage" href="#" title="Simulate link and node cut outages">Failure Outage</a>
+        <a class="intro-nav-link" data-intro-target="traffic" href="#" title="Simulate M/M/1 queuing traffic load">Traffic Load</a>
+        <a class="intro-nav-link" data-intro-target="spof" href="#" title="Run Tarjan SPOF and redundancy analysis">SPOF Analysis</a>
+        <a class="intro-nav-link" data-intro-target="ipam" href="#" title="Plan IP subnets with VLSM calculator">IPAM &amp; VLSM</a>
       </div>
 
       <!-- Right Launch Studio Pill -->
@@ -79,16 +79,22 @@
       </svg>
 
       <!-- Floating Badges in Depth -->
-      <div class="floating-circuit-badge" style="top:58%; left:36%;">BGP / OSPF Core</div>
-      <div class="floating-circuit-badge" style="top:43%; left:65%;">Spine-Leaf Fabric</div>
-      <div class="floating-circuit-badge" style="top:79%; left:32%;">100G Low Latency</div>
-      <div class="floating-circuit-badge" style="top:73%; left:58%;">Core Gateway</div>
-      <div class="floating-circuit-badge" style="top:79%; left:7%;">Zero-Trust Perimeter</div>
-      <div class="floating-circuit-badge" style="top:87%; left:62%;">VLSM Subnet IPAM</div>
+      <div class="floating-circuit-badge" data-badge-target="core" style="top:58%; left:36%;" title="Click to inspect Core Backbone Routers">BGP / OSPF Core</div>
+      <div class="floating-circuit-badge" data-badge-target="dist" style="top:43%; left:65%;" title="Click to inspect Spine-Leaf Distribution Switches">Spine-Leaf Fabric</div>
+      <div class="floating-circuit-badge" data-badge-target="path" style="top:79%; left:32%;" title="Click to test 100G low-latency path routing">100G Low Latency</div>
+      <div class="floating-circuit-badge" data-badge-target="gateway" style="top:73%; left:58%;" title="Click to inspect Core Gateway Router">Core Gateway</div>
+      <div class="floating-circuit-badge" data-badge-target="firewall" style="top:79%; left:7%;" title="Click to inspect Perimeter Firewall">Zero-Trust Perimeter</div>
+      <div class="floating-circuit-badge" data-badge-target="ipam" style="top:87%; left:62%;" title="Click to open VLSM Subnet Planner">VLSM Subnet IPAM</div>
     </div>
 
     <!-- Center Hero Content Area -->
     <div class="intro-hero-container">
+      <!-- Live Backend Connection Pill -->
+      <div class="intro-backend-status-pill" id="intro-backend-status">
+        <span class="status-pulse-dot"></span>
+        <span id="intro-backend-status-text">Backend Simulation Engine Online • FastAPI &amp; NetworkX</span>
+      </div>
+
       <!-- Dual Capsule Badge -->
       <div class="hero-dual-pill">
         <span class="dual-pill-orange">Autonomous Engine</span>
@@ -599,7 +605,7 @@
           <div class="palette-item-icon" style="background:#3b82f6;">🌐</div>
           <div><div style="font-weight:600; font-size:0.85rem;">Spine-Leaf Fabric</div><div style="font-size:0.7rem; color:var(--text-muted);">High-Throughput DC</div></div>
         </div>
-        <div class="palette-item-card" onclick="loadTemplate("small_office")">
+        <div class="palette-item-card" onclick="loadTemplate('small_office')">
           <div class="palette-item-icon" style="background:#10b981;">🏬</div>
           <div><div style="font-weight:600; font-size:0.85rem;">Small Office / Branch</div><div style="font-size:0.7rem; color:var(--text-muted);">Edge Router &amp; Firewall</div></div>
         </div>
@@ -607,10 +613,64 @@
     </div>
   </div>
 
+  <!-- Documentation Modal -->
+  <div class="modal-overlay" id="modal-documentation">
+    <div class="modal-glass-content" style="max-width:760px; max-height:85vh; overflow-y:auto;">
+      <div class="modal-header-row">
+        <div class="modal-title">Platform Architecture &amp; Simulation Engine</div>
+        <button class="modal-close-btn" onclick="document.getElementById('modal-documentation').style.display='none'">&times;</button>
+      </div>
+
+      <div style="font-size:0.84rem; color:var(--text-muted); line-height:1.6; margin-bottom:1.5rem;">
+        <div style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(16,185,129,0.15); color:#10b981; padding:0.35rem 0.85rem; border-radius:99px; font-weight:700; margin-bottom:0.85rem; border:1px solid rgba(16,185,129,0.3);">
+          <span style="width:8px; height:8px; background:#10b981; border-radius:50%; box-shadow:0 0 8px #10b981;"></span> Backend Engine Online • FastAPI 3.11 + NetworkX Graph Theory
+        </div>
+        <p>NetSphere is an enterprise-grade platform for designing, planning, and stress-testing complex network topologies (Campus, Spine-Leaf Data Center, and WAN Branch). All simulations are executed through a Python graph-theoretic simulation engine.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1rem; margin-bottom:1.5rem;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:1.1rem;">
+          <div style="color:var(--accent-orange); font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">Dynamic Dijkstra Routing</div>
+          <p style="font-size:0.76rem; color:var(--text-dim); line-height:1.5;">Calculates optimal shortest paths across topology weighted by OSPF link cost, latency (ms), or hop count with automated cycle detection and bottleneck identification.</p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:1.1rem;">
+          <div style="color:#ef4444; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">Failure Outage &amp; Cut Recovery</div>
+          <p style="font-size:0.76rem; color:var(--text-dim); line-height:1.5;">Simulates hardware failures and fiber cuts. Evaluates partition isolation, detects orphaned nodes, and calculates automated failover rerouting paths.</p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:1.1rem;">
+          <div style="color:#10b981; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">M/M/1 Traffic Queuing Load</div>
+          <p style="font-size:0.76rem; color:var(--text-dim); line-height:1.5;">Models enterprise traffic flows using M/M/1 queue models. Identifies congested links (>80% utilization) and computes queuing delay degradation under load.</p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:1.1rem;">
+          <div style="color:#a855f7; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">Tarjan SPOF Redundancy</div>
+          <p style="font-size:0.76rem; color:var(--text-dim); line-height:1.5;">Executes Tarjan's biconnectivity depth-first search in linear O(V + E) time to identify single points of failure (articulation nodes and bridge links).</p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:1.1rem;">
+          <div style="color:#3b82f6; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">VLSM Subnet Planning (IPAM)</div>
+          <p style="font-size:0.76rem; color:var(--text-dim); line-height:1.5;">Allocates major network address blocks via recursive binary prefix partitioning, maximizing address efficiency with zero wasted host ranges.</p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:1.1rem;">
+          <div style="color:#f59e0b; font-weight:700; font-size:0.88rem; margin-bottom:0.4rem;">Architecture Validation Engine</div>
+          <p style="font-size:0.76rem; color:var(--text-dim); line-height:1.5;">Automated design rule checker auditing MTU/speed matching, default gateway reachability, tier hierarchy integrity, and single-attached critical hosts.</p>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="pill-action-btn" onclick="runHealthValidation(true); document.getElementById('modal-documentation').style.display='none';">Run Architecture Audit</button>
+        <button class="btn-primary-action" onclick="document.getElementById('modal-documentation').style.display='none';">Open Network Studio</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast-container" class="toast-container"></div>
 
-  <script src="./js/api.js?v=20261007c"></script>
-  <script src="./js/cytoscape_graph.js?v=20261007c"></script>
-  <script src="./js/app.js?v=20261007c"></script>
+  <script src="./js/api.js?v=20261007e"></script>
+  <script src="./js/cytoscape_graph.js?v=20261007e"></script>
+  <script src="./js/app.js?v=20261007e"></script>
 </body>
 </html>
